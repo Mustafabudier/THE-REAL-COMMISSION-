@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- 
+      🔴 FIX FOR VERCEL DEPLOYMENT: 
+      This Content-Security-Policy allows 'unsafe-eval' which is required for Tailwind CDN to work.
+      It also whitelists Google Fonts, Vimeo, and Google Scripts.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';">
+
     <title>حاسبة العمولة الحقيقية</title>
     
     <!-- Google Fonts -->
