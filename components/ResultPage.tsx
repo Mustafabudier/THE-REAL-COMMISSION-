@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Star, Users, Gift, ArrowLeft, CheckCircle2, ShieldCheck, ChevronDown, ChevronUp, Target, Flame, Handshake, PlayCircle } from 'lucide-react';
 import { faqs } from '../data/quizData';
 
@@ -165,7 +165,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
     return "تحتاج لبناء مهاراتك من الصفر 📉📚";
   };
 
-  const fadeUpVariant = {
+  const fadeUpVariant: Variants = {
     hidden: { y: 50, opacity: 0 },
     visible: { 
       y: 0, 
@@ -415,7 +415,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
                     opacity: 1, 
                     transition: { delay: i * 0.1, duration: 0.6, ease: "easeOut" } 
                   }
-                }}
+                } as Variants}
                 whileHover={{ scale: 1.02, backgroundColor: "rgba(39, 39, 42, 0.8)" }}
                 className="group bg-zinc-900/40 backdrop-blur-sm rounded-xl p-6 flex flex-col items-center justify-center text-center gap-3 border border-zinc-800 hover:border-[#BE123C]/50 transition-all duration-300 shadow-lg cursor-default"
               >

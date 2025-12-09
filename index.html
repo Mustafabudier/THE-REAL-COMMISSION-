@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- 
-      🔴 FIX FOR VERCEL DEPLOYMENT: 
-      This Content-Security-Policy allows 'unsafe-eval' which is required for Tailwind CDN to work.
-      It also whitelists Google Fonts, Vimeo, and Google Scripts.
+      CSP Configuration:
+      Allows 'unsafe-eval' for Tailwind CDN and 'unsafe-inline' for styles/scripts.
+      This is required for the app to function without a build step.
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
 
     <title>حاسبة العمولة الحقيقية</title>
     
@@ -78,19 +78,24 @@
         }
       }
     </script>
-  <script type="importmap">
+    
+    <!-- Import Map with Reliable ESM Sources -->
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.1",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "framer-motion": "https://esm.sh/framer-motion@10.12.16",
     "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^11.0.28"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
   }
 }
 </script>
-</head>
+  </head>
   <body class="bg-rose-50 antialiased overflow-x-hidden">
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
