@@ -56,7 +56,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         </div>
 
         {/* Hero Headline */}
-        <h1 className="font-aref font-bold text-rose-900 leading-[1.3] mb-6 drop-shadow-sm
+        <h1 className="font-aref font-bold text-[#7f1d1d] leading-[1.3] mb-6 drop-shadow-sm
             text-6xl md:text-8xl lg:text-9xl
         ">
           عمولتك الحقيقية

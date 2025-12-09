@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import QuizPage from './components/QuizPage';
 import ResultGatePage from './components/ResultGatePage';
@@ -17,6 +17,11 @@ const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('landing');
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState(0); 
+
+  // Scroll to top whenever view changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [view]);
 
   const calculateScore = (collectedAnswers: Record<number, string>) => {
     let totalScore = 0;
@@ -43,6 +48,7 @@ const App: React.FC = () => {
   const handleQuizFinish = (collectedAnswers: Record<number, string>) => {
     setAnswers(collectedAnswers);
     calculateScore(collectedAnswers);
+    window.scrollTo(0,0);
     setView('result_gate');
   };
 
@@ -89,10 +95,12 @@ const App: React.FC = () => {
       }
 
       // 4. Redirect to Result Page regardless of API success (to not block user)
+      window.scrollTo(0,0);
       setView('result');
       
     } catch (error) {
       console.error("Error submitting form", error);
+      window.scrollTo(0,0);
       setView('result');
     }
   };

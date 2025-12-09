@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Star, Users, Gift, ArrowLeft, CheckCircle2, ShieldCheck, ChevronDown, ChevronUp, Target, Flame, Handshake, PlayCircle } from 'lucide-react';
@@ -402,7 +403,9 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
               { icon: Target, text: "خطة واضحة" },
               { icon: Handshake, text: "متابعة شخصية" },
               { icon: Flame, text: "نتائج سريعة" },
-            ].map((item, i) => (
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
               <motion.div 
                 key={i}
                 initial="hidden"
@@ -420,11 +423,11 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
                 className="group bg-zinc-900/40 backdrop-blur-sm rounded-xl p-6 flex flex-col items-center justify-center text-center gap-3 border border-zinc-800 hover:border-[#BE123C]/50 transition-all duration-300 shadow-lg cursor-default"
               >
                 <div className="p-3 bg-black rounded-full border border-zinc-800 group-hover:border-[#BE123C] transition-colors">
-                   <item.icon className="text-[#BE123C] group-hover:text-white transition-colors" size={24} />
+                   <Icon className="text-[#BE123C] group-hover:text-white transition-colors" size={24} />
                 </div>
                 <span className="font-cairo font-bold text-lg text-gray-200">{item.text}</span>
               </motion.div>
-            ))}
+            )})}
            </div>
         </div>
 

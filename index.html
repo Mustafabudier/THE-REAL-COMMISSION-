@@ -8,7 +8,6 @@
     <!-- 
       CSP Configuration:
       Allows 'unsafe-eval' for Tailwind CDN and 'unsafe-inline' for styles/scripts.
-      This is required for the app to function without a build step.
     -->
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
 
@@ -52,6 +51,7 @@
               shine: "shine 3s infinite",
               textShine: "textShine 3s linear infinite",
               pulsefast: "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              "fade-in-down": "fadeInDown 0.8s ease-out forwards",
             },
             keyframes: {
               blob: {
@@ -72,6 +72,10 @@
               textShine: {
                 "0%": { backgroundPosition: "200% center" },
                 "100%": { backgroundPosition: "-200% center" }
+              },
+              fadeInDown: {
+                "0%": { opacity: "0", transform: "translateY(-20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" }
               }
             }
           }
@@ -79,7 +83,7 @@
       }
     </script>
     
-    <!-- Import Map with Reliable ESM Sources -->
+    <!-- Import Map with Consistent ESM Sources (React 18) -->
     <script type="importmap">
 {
   "imports": {
@@ -88,8 +92,10 @@
     "react-dom": "https://esm.sh/react-dom@18.2.0",
     "lucide-react": "https://esm.sh/lucide-react@0.263.1",
     "framer-motion": "https://esm.sh/framer-motion@10.12.16",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
     "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+    "vite": "https://aistudiocdn.com/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
