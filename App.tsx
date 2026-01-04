@@ -22,7 +22,12 @@ const App: React.FC = () => {
   const [score, setScore] = useState(85);
 
   useEffect(() => {
+    // التمرير للأعلى عند تغيير الصفحة
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // إرسال PageView عند كل تغيير في الـ view لضمان دقة التتبع في الـ SPA
+    // هذا يحاكي سلوك Next.js في تتبع المسارات
+    trackFbEvent('PageView', { view_name: view });
   }, [view]);
 
   const calculateScore = (collectedAnswers: Record<number, string>) => {
@@ -51,9 +56,8 @@ const App: React.FC = () => {
   const handleQuizFinish = (collectedAnswers: Record<number, string>) => {
     setAnswers(collectedAnswers);
     calculateScore(collectedAnswers);
-    window.scrollTo(0,0);
     
-    // إرسال حدث لفيسبوك: العميل أنهى الأسئلة بنجاح (نستخدم SubmitApplication كحدث قياسي)
+    // إرسال حدث لفيسبوك: العميل أنهى الأسئلة بنجاح
     trackFbEvent('SubmitApplication');
     
     setView('result_gate');
@@ -94,12 +98,10 @@ const App: React.FC = () => {
         content_name: 'Quiz Completion'
       });
 
-      window.scrollTo(0,0);
       setView('result');
       
     } catch (error) {
       console.error("Error submitting form", error);
-      window.scrollTo(0,0);
       setView('result');
     }
   };
