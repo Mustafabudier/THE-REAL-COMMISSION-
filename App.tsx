@@ -25,8 +25,8 @@ const App: React.FC = () => {
     // التمرير للأعلى عند تغيير الصفحة
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // إرسال PageView عند كل تغيير في الـ view لضمان دقة التتبع في الـ SPA
-    // هذا يحاكي سلوك Next.js في تتبع المسارات
+    // إرسال PageView عند كل تغيير في الـ view.
+    // هذا يضمن أن فيسبوك يقرأ "التحركات" داخل الموقع وكأنها صفحات حقيقية.
     trackFbEvent('PageView', { view_name: view });
   }, [view]);
 
@@ -49,7 +49,7 @@ const App: React.FC = () => {
   };
 
   const handleStartQuiz = () => {
-    trackFbEvent('Contact'); // إشارة لفيسبوك بأن الشخص بدأ الاختبار
+    trackFbEvent('Contact'); // إشارة بأن المستخدم بدأ التفاعل الحقيقي
     setView('quiz');
   };
 
@@ -57,7 +57,7 @@ const App: React.FC = () => {
     setAnswers(collectedAnswers);
     calculateScore(collectedAnswers);
     
-    // إرسال حدث لفيسبوك: العميل أنهى الأسئلة بنجاح
+    // إرسال حدث لفيسبوك: العميل أنهى الأسئلة بنجاح ووصل لمرحلة حجز النتيجة
     trackFbEvent('SubmitApplication');
     
     setView('result_gate');
@@ -91,11 +91,11 @@ const App: React.FC = () => {
         });
       }
 
-      // الحدث الأهم: العميل سجل بياناته وحصل على النتيجة (Lead)
+      // الحدث الأهم: العميل سجل بياناته بنجاح (Lead)
       trackFbEvent('Lead', {
         value: score,
         currency: 'USD',
-        content_name: 'Quiz Completion'
+        content_name: 'Quiz Result Unlocked'
       });
 
       setView('result');
