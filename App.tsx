@@ -9,7 +9,6 @@ type ViewState = 'landing' | 'quiz' | 'result_gate' | 'result';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiw7bU06Cu9qN3SxaXk0a8FqZnhryEDdJz3VrHH9CYY3r_7nYfZfQst-yUPuJZNYQ/exec"; 
 
-// وظيفية مساعدة لإرسال الأحداث لفيسبوك
 const trackFbEvent = (eventName: string, params?: any) => {
   if (typeof window !== 'undefined' && (window as any).fbq) {
     (window as any).fbq('track', eventName, params);
@@ -22,11 +21,7 @@ const App: React.FC = () => {
   const [score, setScore] = useState(85);
 
   useEffect(() => {
-    // التمرير للأعلى عند تغيير الصفحة
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // إرسال PageView عند كل تغيير في الـ view.
-    // هذا يضمن أن فيسبوك يقرأ "التحركات" داخل الموقع وكأنها صفحات حقيقية.
     trackFbEvent('PageView', { view_name: view });
   }, [view]);
 
@@ -49,17 +44,14 @@ const App: React.FC = () => {
   };
 
   const handleStartQuiz = () => {
-    trackFbEvent('Contact'); // إشارة بأن المستخدم بدأ التفاعل الحقيقي
+    trackFbEvent('Contact');
     setView('quiz');
   };
 
   const handleQuizFinish = (collectedAnswers: Record<number, string>) => {
     setAnswers(collectedAnswers);
     calculateScore(collectedAnswers);
-    
-    // إرسال حدث لفيسبوك: العميل أنهى الأسئلة بنجاح ووصل لمرحلة حجز النتيجة
     trackFbEvent('SubmitApplication');
-    
     setView('result_gate');
   };
 
@@ -82,16 +74,20 @@ const App: React.FC = () => {
     };
 
     try {
-      if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith("http")) {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(payload),
-        });
-      }
+      // إرسال البيانات مع وعد (Promise) لضمان المحاولة قبل الانتقال
+      const submissionPromise = fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
 
-      // الحدث الأهم: العميل سجل بياناته بنجاح (Lead)
+      // ننتظر الإرسال أو نضع حدا أقصى للانتظار ثانية واحدة لضمان تجربة مستخدم سريعة
+      await Promise.race([
+        submissionPromise,
+        new Promise(resolve => setTimeout(resolve, 1200)) 
+      ]);
+
       trackFbEvent('Lead', {
         value: score,
         currency: 'USD',
@@ -101,33 +97,17 @@ const App: React.FC = () => {
       setView('result');
       
     } catch (error) {
-      console.error("Error submitting form", error);
-      setView('result');
+      console.error("Submission failed", error);
+      setView('result'); // ننتقل للنتيجة في كل الأحوال لكي لا يغادر المستخدم
     }
   };
 
   return (
     <div className="min-h-screen w-full relative">
-       {view === 'landing' && (
-         <LandingPage onStart={handleStartQuiz} />
-       )}
-       
-       {view === 'quiz' && (
-         <QuizPage onFinish={handleQuizFinish} />
-       )}
-
-       {view === 'result_gate' && (
-         <ResultGatePage 
-            onSubmit={handleGateSubmit}
-         />
-       )}
-
-       {view === 'result' && (
-         <ResultPage 
-            score={score}
-            answers={answers}
-         />
-       )}
+       {view === 'landing' && <LandingPage onStart={handleStartQuiz} />}
+       {view === 'quiz' && <QuizPage onFinish={handleQuizFinish} />}
+       {view === 'result_gate' && <ResultGatePage onSubmit={handleGateSubmit} />}
+       {view === 'result' && <ResultPage score={score} answers={answers} />}
     </div>
   );
 };
