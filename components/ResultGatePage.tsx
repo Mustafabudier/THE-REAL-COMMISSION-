@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Loader2, ShieldCheck, ArrowRight, TrendingUp, ChevronDown } from 'lucide-react';
+import { Lock, Loader2, ShieldCheck, ArrowRight, ChevronDown } from 'lucide-react';
 
 interface ResultGatePageProps {
   onSubmit: (formData: any) => void;
@@ -19,20 +19,21 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
   const validate = () => {
     const newErrors: Record<string, string> = {};
     
-    if (formData.name.trim().length < 3) newErrors.name = 'الاسم مطلوب بشكل كامل';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'يرجى إدخال بريد إلكتروني صحيح';
+    if (formData.name.trim().length < 3) newErrors.name = 'الاسم مطلوب';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'بريد غير صحيح';
     
-    // التحقق من رقم الهاتف لضمان وصوله لجوجل شيت وللواتساب بشكل صحيح
+    // تنظيف الرقم من أي رموز
     const phoneClean = formData.phone.replace(/[\s\-\+\(\)]/g, ''); 
+    
+    // شروط مرنة: الطول بين 9 و 15 خانة، ويسمح بالبدء بـ 0
     const isValidLength = phoneClean.length >= 9 && phoneClean.length <= 15;
-    const isGeneric = /^(012345678|123456789|0123456789|987654321|00000000|11111111|22222222|33333333|44444444|55555555|66666666|77777777|88888888|99999999)$/.test(phoneClean);
-    const hasTooManyRepeats = /(.)\1{6,}/.test(phoneClean);
+    const isFake = /^(012345678|123456789|111111111|000000000)$/.test(phoneClean);
 
-    if (!isValidLength || isGeneric || hasTooManyRepeats || !/^\d+$/.test(phoneClean)) {
-      newErrors.phone = 'يرجى إدخال رقم هاتف حقيقي (مثل: 05xxxxxxx)';
+    if (!isValidLength || isFake || !/^\d+$/.test(phoneClean)) {
+      newErrors.phone = 'رقم الهاتف غير صحيح (مثال: 05xxxxxxxx)';
     }
     
-    if (!formData.country) newErrors.country = 'يرجى اختيار الدولة';
+    if (!formData.country) newErrors.country = 'مطلوب';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -54,52 +55,53 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
 
   return (
     <div className="min-h-[100dvh] w-full bg-black flex flex-col items-center justify-center p-4 font-ibm relative overflow-hidden">
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-[#0f0000] to-black"></div>
-        <div className="absolute top-[40%] left-[-2%] md:left-[5%] opacity-30 animate-float text-5xl z-0">🎯</div>
-      </div>
-
-      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="relative z-10 text-center mb-6">
-        <h1 className="font-aref font-bold text-4xl md:text-5xl text-white">عمولتك الحقيقية</h1>
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-[#1a0000] to-black opacity-50"></div>
+      
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="relative z-10 text-center mb-8">
+        <h1 className="font-aref font-bold text-4xl text-white">عمولتك الحقيقية</h1>
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-[280px] flex flex-col items-center">
-        <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] bg-red-600/30 blur-[60px] rounded-full pointer-events-none z-0"></div>
-        
-        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full relative z-20 shadow-2xl">
-            <img src="https://lh3.googleusercontent.com/d/1kCqtTV-3Do4rJWjxjb8NhgZRMVubw-CB" alt="Locked Result" className="w-full h-auto object-cover rounded-t-[1.5rem]" />
-        </motion.div>
+      <div className="relative z-10 w-full max-w-[320px]">
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-[#0a0a0a] rounded-[2rem] border border-zinc-800 shadow-2xl overflow-hidden">
+           <img src="https://lh3.googleusercontent.com/d/1kCqtTV-3Do4rJWjxjb8NhgZRMVubw-CB" alt="Locked" className="w-full h-32 object-cover opacity-80" />
+           
+           <div className="p-6">
+              <div className="text-center mb-6">
+                <h2 className="text-white font-bold text-xl flex items-center justify-center gap-2">النتيجة بانتظارك <Lock size={16} className="text-red-600" /></h2>
+                <p className="text-zinc-500 text-[11px] mt-1">سجل بياناتك لفك القفل عن نتيجتك</p>
+              </div>
 
-        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="w-full relative z-10 bg-[#050505] rounded-b-[1.5rem] border-x border-b border-zinc-900 shadow-2xl p-4">
-           <div className="text-center mb-4">
-               <h2 className="font-ibm font-bold text-lg text-white mb-1 flex items-center justify-center gap-2">النتيجة جاهزة <Lock size={14} className="text-red-500" /></h2>
-               <p className="text-[10px] text-zinc-400">املئ بياناتك بدقة لتصلك النتيجة</p>
-           </div>
-
-           <form onSubmit={handleSubmit} className="w-full space-y-2.5">
-              <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="الاسم الكامل" className={`w-full bg-[#0a0a0a] border ${errors.name ? 'border-red-500' : 'border-zinc-800'} rounded-lg px-3 py-2 text-right text-white text-xs focus:border-red-600 outline-none`} />
-              <input type="email" name="email" dir="ltr" value={formData.email} onChange={handleChange} placeholder="البريد الإلكتروني" className={`w-full bg-[#0a0a0a] border ${errors.email ? 'border-red-500' : 'border-zinc-800'} rounded-lg px-3 py-2 text-right text-white text-xs focus:border-red-600 outline-none`} />
-              <input type="tel" name="phone" dir="ltr" value={formData.phone} onChange={handleChange} placeholder="رقم الهاتف (مثل: 05xxxxxxxx)" className={`w-full bg-[#0a0a0a] border ${errors.phone ? 'border-red-500' : 'border-zinc-800'} rounded-lg px-3 py-2 text-right text-white text-xs focus:border-red-600 outline-none`} />
-              {errors.phone && <p className="text-[9px] text-red-500 font-bold">{errors.phone}</p>}
-              
-              <div className="relative">
-                  <select name="country" value={formData.country} onChange={handleChange} className={`w-full bg-[#0a0a0a] border ${errors.country ? 'border-red-500' : 'border-zinc-800'} rounded-lg px-3 py-2 text-right appearance-none text-white text-xs outline-none cursor-pointer`}>
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="الاسم الكامل" className={`w-full bg-black border ${errors.name ? 'border-red-500' : 'border-zinc-800'} rounded-xl px-4 py-3 text-white text-sm focus:border-red-600 outline-none transition-all`} />
+                <input type="email" name="email" dir="ltr" value={formData.email} onChange={handleChange} placeholder="البريد الإلكتروني" className={`w-full bg-black border ${errors.email ? 'border-red-500' : 'border-zinc-800'} rounded-xl px-4 py-3 text-white text-sm focus:border-red-600 outline-none transition-all`} />
+                <input type="tel" name="phone" dir="ltr" value={formData.phone} onChange={handleChange} placeholder="رقم الهاتف (05xxxxxxxx)" className={`w-full bg-black border ${errors.phone ? 'border-red-500' : 'border-zinc-800'} rounded-xl px-4 py-3 text-white text-sm focus:border-red-600 outline-none transition-all`} />
+                {errors.phone && <p className="text-[10px] text-red-500 font-bold px-1">{errors.phone}</p>}
+                
+                <div className="relative">
+                  <select name="country" value={formData.country} onChange={handleChange} className={`w-full bg-black border ${errors.country ? 'border-red-500' : 'border-zinc-800'} rounded-xl px-4 py-3 text-white text-sm appearance-none outline-none cursor-pointer`}>
                     <option value="" disabled>اختر الدولة</option>
                     <option value="SA">السعودية 🇸🇦</option>
                     <option value="AE">الإمارات 🇦🇪</option>
                     <option value="KW">الكويت 🇰🇼</option>
-                    <option value="EG">مصر 🇪🇬</option>
                     <option value="JO">الأردن 🇯🇴</option>
+                    <option value="EG">مصر 🇪🇬</option>
                     <option value="OTHER">دولة أخرى 🌍</option>
                   </select>
-                  <ChevronDown size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" />
-              </div>
+                  <ChevronDown size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" />
+                </div>
 
-              <button type="submit" disabled={isSubmitting} className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2">
-                {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : <ArrowRight size={14} />}
-                <span className="text-xs">{isSubmitting ? 'جاري الإرسال...' : 'إعرض نتيجتي الان'}</span>
-              </button>
-           </form>
+                <button type="submit" disabled={isSubmitting} className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-900/20 mt-4">
+                  {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
+                  <span>{isSubmitting ? 'جاري التأمين...' : 'إعرض نتيجتي الآن'}</span>
+                </button>
+              </form>
+
+              <div className="mt-6 flex items-center justify-center gap-4 border-t border-zinc-900 pt-4">
+                <div className="flex items-center gap-1 text-[10px] text-zinc-500"><ShieldCheck size={12} className="text-green-600" /> آمن</div>
+                <div className="w-px h-3 bg-zinc-800"></div>
+                <div className="flex items-center gap-1 text-[10px] text-zinc-500"><Lock size={12} className="text-red-600" /> مشفر</div>
+              </div>
+           </div>
         </motion.div>
       </div>
     </div>

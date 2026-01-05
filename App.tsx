@@ -7,6 +7,7 @@ import { questions } from './data/quizData';
 
 type ViewState = 'landing' | 'quiz' | 'result_gate' | 'result';
 
+// الرابط الذي زودتني به يا مصطفى - تم التأكد من صحته
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiw7bU06Cu9qN3SxaXk0a8FqZnhryEDdJz3VrHH9CYY3r_7nYfZfQst-yUPuJZNYQ/exec"; 
 
 const trackFbEvent = (eventName: string, params?: any) => {
@@ -62,7 +63,7 @@ const App: React.FC = () => {
     const q2Text = questions.find(q => q.id === 2)?.options.find(opt => opt.id === q2AnswerId)?.text || "لم يجب";
 
     const payload = {
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleString('ar-EG'),
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
@@ -74,7 +75,7 @@ const App: React.FC = () => {
     };
 
     try {
-      // إرسال البيانات مع وعد (Promise) لضمان المحاولة قبل الانتقال
+      // إرسال البيانات
       const submissionPromise = fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -82,10 +83,10 @@ const App: React.FC = () => {
         body: JSON.stringify(payload),
       });
 
-      // ننتظر الإرسال أو نضع حدا أقصى للانتظار ثانية واحدة لضمان تجربة مستخدم سريعة
-      await Promise.race([
+      // ننتظر 2 ثانية لضمان استلام المتصفح للأمر قبل إغلاق الصفحة الحالية
+      await Promise.all([
         submissionPromise,
-        new Promise(resolve => setTimeout(resolve, 1200)) 
+        new Promise(resolve => setTimeout(resolve, 2000))
       ]);
 
       trackFbEvent('Lead', {
@@ -98,12 +99,12 @@ const App: React.FC = () => {
       
     } catch (error) {
       console.error("Submission failed", error);
-      setView('result'); // ننتقل للنتيجة في كل الأحوال لكي لا يغادر المستخدم
+      setView('result'); 
     }
   };
 
   return (
-    <div className="min-h-screen w-full relative">
+    <div className="min-h-screen w-full relative bg-black">
        {view === 'landing' && <LandingPage onStart={handleStartQuiz} />}
        {view === 'quiz' && <QuizPage onFinish={handleQuizFinish} />}
        {view === 'result_gate' && <ResultGatePage onSubmit={handleGateSubmit} />}
