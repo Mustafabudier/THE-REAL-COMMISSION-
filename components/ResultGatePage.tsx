@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Loader2, ShieldCheck, ArrowRight, TrendingUp, ChevronDown } from 'lucide-react';
@@ -19,9 +18,35 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
+    
+    // التحقق من الاسم
     if (formData.name.trim().length < 3) newErrors.name = 'الاسم مطلوب';
+    
+    // التحقق من البريد الإلكتروني
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'بريد غير صحيح';
-    if (!/^\d{8,}$/.test(formData.phone)) newErrors.phone = 'رقم غير صحيح';
+    
+    // التحقق الصارم والنهائي من رقم الهاتف لضمان صلاحيته للواتساب
+    const phoneClean = formData.phone.replace(/[\s\-\+\(\)]/g, ''); 
+    
+    // 1. طول الرقم بين 10 و 15 (الأرقام الدولية عادة لا تقل عن 10 خانات مع مفتاح الدولة)
+    const isValidLength = phoneClean.length >= 10 && phoneClean.length <= 15;
+    
+    // 2. منع الأرقام العشوائية المتسلسلة الشهيرة
+    const isGeneric = /^(012345678|123456789|0123456789|987654321|00000000|11111111|22222222|33333333|44444444|55555555|66666666|77777777|88888888|99999999)$/.test(phoneClean);
+    
+    // 3. منع تكرار نفس الرقم أكثر من 6 مرات متتالية (سلوك الأرقام الوهمية)
+    const hasTooManyRepeats = /(.)\1{6,}/.test(phoneClean);
+
+    // 4. التحقق من وجود مفتاح الدولة (يجب ألا يبدأ بـ 0 إذا كان دولياً، أو يجب أن يكون طويلاً كفاية)
+    const isMissingCountryCode = phoneClean.startsWith('0') && phoneClean.length < 11;
+
+    if (!isValidLength || isGeneric || hasTooManyRepeats || !/^\d+$/.test(phoneClean)) {
+      newErrors.phone = 'الرقم غير صحيح، يرجى إدخال رقم هاتف حقيقي';
+    } else if (isMissingCountryCode) {
+      newErrors.phone = 'يرجى كتابة الرقم مع مفتاح الدولة (مثال: 966+)';
+    }
+    
+    // التحقق من الدولة
     if (!formData.country) newErrors.country = 'مطلوب';
     
     setErrors(newErrors);
@@ -48,21 +73,14 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
       
       {/* 1. Background Animation */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Deep Ambient Glows */}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-[#0f0000] to-black"></div>
-        
-        {/* Floating Emojis - Positioned to be visible on mobile */}
-        {/* Top Right */}
-        <div className="absolute top-[5%] right-[5%] opacity-30 animate-float text-4xl grayscale hover:grayscale-0 transition-all duration-500 z-0">💲</div>
-        {/* Middle Left */}
         <div className="absolute top-[40%] left-[-2%] md:left-[5%] opacity-30 animate-float text-5xl grayscale hover:grayscale-0 transition-all duration-500 z-0" style={{ animationDelay: '1.5s' }}>🎯</div>
-        {/* Bottom Right */}
         <div className="absolute bottom-[10%] right-[0%] md:right-[15%] opacity-20 animate-float text-red-800 z-0" style={{ animationDelay: '2s' }}>
              <TrendingUp size={50} strokeWidth={1.5} />
         </div>
       </div>
 
-      {/* 2. Main Title - Clean White */}
+      {/* 2. Main Title */}
       <motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -73,36 +91,34 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
         </h1>
       </motion.div>
 
-      {/* 3. The Content Wrapper (Merged Stack) */}
+      {/* 3. The Content Wrapper */}
       <div className="relative z-10 w-full max-w-[280px] flex flex-col items-center">
         
-        {/* Glow Effect - Behind the Stack */}
         <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] bg-red-600/30 blur-[60px] rounded-full pointer-events-none z-0"></div>
 
-        {/* Image - Top Half - Merged */}
+        {/* Image */}
         <motion.div 
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full relative z-20 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.9)]" // Black shadow casting down onto the card for contrast
+            className="w-full relative z-20 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.9)]"
         >
             <img 
               src="https://lh3.googleusercontent.com/d/1kCqtTV-3Do4rJWjxjb8NhgZRMVubw-CB" 
               alt="Locked Result" 
-              className="w-full h-auto object-cover rounded-t-[1.5rem] block" // Rounded top, block display
+              className="w-full h-auto object-cover rounded-t-[1.5rem] block"
             />
         </motion.div>
 
-        {/* The Card (Form Only) - Bottom Half - Merged */}
+        {/* Card */}
         <motion.div 
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="w-full relative z-10 bg-[#050505] rounded-b-[1.5rem] rounded-t-none overflow-hidden border-x border-b border-zinc-900 shadow-2xl" // Remove top border to seamless merge
+          className="w-full relative z-10 bg-[#050505] rounded-b-[1.5rem] rounded-t-none overflow-hidden border-x border-b border-zinc-900 shadow-2xl"
         >
           <div className="px-4 pt-6 pb-5 flex flex-col items-center">
              
-             {/* Text Block */}
              <div className="text-center mb-5">
                <h2 className="font-ibm font-bold text-xl text-white mb-1 flex items-center justify-center gap-2">
                  <span>النتيجة جاهزة</span>
@@ -113,10 +129,8 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
                </p>
              </div>
 
-             {/* Form - Compact Vertical Spacing */}
              <form onSubmit={handleSubmit} className="w-full space-y-2.5">
               
-              {/* 1. Name */}
               <div className="space-y-1">
                 <label className="block text-zinc-500 text-[10px] font-medium pr-1">الاسم الكامل</label>
                 <input 
@@ -130,7 +144,6 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
                 />
               </div>
 
-              {/* 2. Email */}
               <div className="space-y-1">
                 <label className="block text-zinc-500 text-[10px] font-medium pr-1">البريد الإلكتروني</label>
                 <input 
@@ -145,7 +158,6 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
                 />
               </div>
 
-              {/* 3. Phone */}
               <div className="space-y-1">
                 <label className="block text-zinc-500 text-[10px] font-medium pr-1">رقم الهاتف</label>
                 <input 
@@ -156,11 +168,11 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
                   value={formData.phone}
                   onChange={handleChange}
                   className={`w-full bg-[#0a0a0a] border ${errors.phone ? 'border-red-500' : 'border-zinc-800'} rounded-lg px-3 py-2 text-right font-ibm text-white placeholder-zinc-700 text-xs focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all`}
-                  placeholder="+966"
+                  placeholder="+966xxxxxxxxx"
                 />
+                {errors.phone && <p className="text-[9px] text-red-500 pr-1 mt-0.5 leading-tight font-bold">{errors.phone}</p>}
               </div>
 
-              {/* 4. Country */}
               <div className="space-y-1">
                   <label className="block text-zinc-500 text-[10px] font-medium pr-1">الدولة</label>
                   <div className="relative">
@@ -198,7 +210,6 @@ const ResultGatePage: React.FC<ResultGatePageProps> = ({ onSubmit }) => {
                 {!isSubmitting && <ArrowRight size={14} className="text-red-200" />}
               </button>
 
-              {/* Trust Badges */}
               <div className="flex items-center justify-center gap-2 pt-2 border-t border-zinc-900/50 w-full mt-2">
                   <div className="flex items-center gap-1">
                       <ShieldCheck size={10} className="text-green-500" />

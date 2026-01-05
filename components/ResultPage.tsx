@@ -1,11 +1,11 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { 
   Gift, 
   Instagram,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  MessageCircle
 } from 'lucide-react';
 import { faqs } from '../data/quizData';
 
@@ -130,12 +130,12 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
   return (
     <div className="min-h-screen w-full bg-[#000000] font-ibm pb-20 overflow-x-hidden relative text-white selection:bg-red-900 selection:text-white">
       
-      {/* 1. Optimized Background (Static CSS animations preferred over JS) */}
+      {/* 1. Optimized Background */}
       <div className="fixed inset-0 w-full h-full pointer-events-none z-0">
          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[80px]"></div>
          <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-red-950/20 rounded-full blur-[80px]"></div>
          
-         {/* Floating Icons - CSS Animation */}
+         {/* Floating Icons */}
          <div className="absolute top-[10%] right-[5%] opacity-20 animate-float text-4xl">💲</div>
          <div className="absolute top-[30%] left-[10%] opacity-20 animate-float text-5xl" style={{ animationDelay: '2s' }}>🎯</div>
          <div className="absolute bottom-[20%] right-[15%] opacity-15 animate-float text-3xl" style={{ animationDelay: '1s' }}>📈</div>
@@ -150,7 +150,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
           </h1>
         </div>
 
-        {/* 3. Red Stats Boxes (RED COLOR + EMOJIS + STATIC) */}
+        {/* 3. Red Stats Boxes */}
         <div className="grid grid-cols-2 gap-4">
           <div className="relative bg-gradient-to-br from-red-900 to-red-950 border border-red-500/30 rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-lg group">
              <span className="text-3xl mb-2 filter drop-shadow-md">👥</span>
@@ -171,9 +171,8 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
           </div>
         </div>
 
-        {/* 4. Result Card (STATIC) */}
+        {/* 4. Result Card */}
         <div className="bg-[#0a0a0a] rounded-[2.5rem] border border-zinc-800 p-6 md:p-8 flex flex-col items-center text-center relative overflow-hidden shadow-2xl">
-          {/* Title */}
           <h2 className="font-ibm font-bold text-2xl text-red-500 mb-6 drop-shadow-sm">نتيجتك النهائية</h2>
 
           {/* SVG Gauge */}
@@ -185,7 +184,6 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
                     <stop offset="100%" stopColor="#991b1b" />
                   </linearGradient>
                 </defs>
-                {/* Background Path (Gray) */}
                 <path 
                   d="M 15 100 A 85 85 0 0 1 185 100" 
                   fill="none" 
@@ -193,8 +191,6 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
                   strokeWidth="18" 
                   strokeLinecap="round" 
                 />
-                
-                {/* Progress Path (Gradient) */}
                 <motion.path 
                   d="M 15 100 A 85 85 0 0 1 185 100" 
                   fill="none" 
@@ -210,17 +206,14 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
                 />
              </svg>
              
-             {/* Score Text positioned absolutely to be in center bottom */}
              <div className="absolute bottom-0 left-0 w-full flex flex-col items-center justify-end h-full pb-2">
                 <div className="font-outfit font-black text-5xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
                   {Math.round(animatedScore)}%
                 </div>
-                {/* Voltage/Line */}
                 <div className="w-16 h-1 bg-red-500 rounded-full mt-2 animate-pulse shadow-[0_0_8px_#ef4444]"></div>
              </div>
           </div>
 
-          {/* Feedback Text */}
           <p className="text-zinc-300 font-ibm font-medium text-base mb-8 px-2 leading-relaxed">
              {getResultFeedback()}
              <br/>
@@ -229,7 +222,6 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
              </span>
           </p>
 
-          {/* Get Gift Button */}
           <button 
             onClick={scrollToVideo}
             className="group w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white py-4 rounded-xl transition-all flex items-center justify-center gap-3 relative overflow-hidden"
@@ -240,7 +232,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
           </button>
         </div>
 
-        {/* 5. Video Section (STATIC) */}
+        {/* 5. Video Section */}
         <div ref={videoRef} className="flex flex-col gap-3 scroll-mt-20">
            <div className="flex items-center gap-2 mb-1 justify-center">
               <span className="text-2xl animate-pulse">🎁</span>
@@ -262,20 +254,16 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
            </div>
         </div>
 
-        {/* 6. Red CTA Card (Commission) (STATIC) - REFINED */}
+        {/* 6. Red CTA Card (Commission) */}
         <div className="bg-gradient-to-br from-[#b91c1c] to-[#991b1b] rounded-[2.5rem] p-6 text-center shadow-[0_0_30px_rgba(185,28,28,0.4)] relative overflow-hidden border border-red-500/20">
-           {/* Texture Overlay */}
            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '20px 20px' }}></div>
            
            <div className="relative z-10 flex flex-col items-center justify-center py-8">
               
-              {/* Word Grouping */}
               <div className="relative inline-block mb-4">
-                 {/* "Send Word" - Positioned top right of "Commission" */}
                  <span className="absolute -top-8 -right-6 md:-top-10 md:-right-12 text-red-100/90 font-ibm font-bold text-lg whitespace-nowrap rotate-[-3deg]">
                    ارسل كلمة
                  </span>
-                 {/* "Commission" - Big & Center */}
                  <h2 className="font-aref font-bold text-[5.5rem] md:text-[7rem] text-white drop-shadow-xl leading-[1.1]">
                    عمولة
                  </h2>
@@ -285,27 +273,38 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
                 لناقش مع بعض الشق التاني من الاستراتيجية ونرسم خطة البدء
               </p>
 
-              {/* Smaller, Cleaner Button */}
-              <a 
-                 href="https://www.instagram.com/themustafabdier?igsh=YW14Y2Y3MXBiYnJo&utm_source=qr" 
-                 target="_blank"
-                 rel="noreferrer"
-                 className="mt-6 inline-flex items-center gap-2 bg-white text-[#b91c1c] px-6 py-2.5 rounded-full font-ibm font-bold text-xs md:text-sm shadow-lg hover:bg-red-50 transition-all hover:scale-105"
-              >
-                 <Instagram size={16} />
-                 <span>اضغط وأرسل كلمة عمولة من هنا</span>
-              </a>
+              <div className="flex flex-col gap-3 w-full max-w-[320px] mx-auto">
+                {/* Instagram Button */}
+                <a 
+                   href="https://www.instagram.com/themustafabdier?igsh=YW14Y2Y3MXBiYnJo&utm_source=qr" 
+                   target="_blank"
+                   rel="noreferrer"
+                   className="mt-6 inline-flex items-center justify-center gap-2 bg-white text-[#b91c1c] px-6 py-2.5 rounded-full font-ibm font-bold text-xs md:text-sm shadow-lg hover:bg-red-50 transition-all hover:scale-105"
+                >
+                   <Instagram size={16} />
+                   <span>اضغط وأرسل كلمة عمولة من هنا</span>
+                </a>
+
+                {/* WhatsApp Button */}
+                <a 
+                   href="https://wa.me/447400757671?text=عمولة" 
+                   target="_blank"
+                   rel="noreferrer"
+                   className="inline-flex items-center justify-center gap-2 bg-transparent border border-white/30 text-white px-6 py-2.5 rounded-full font-ibm font-bold text-xs md:text-sm transition-all hover:bg-white/10 hover:border-white/50"
+                >
+                   <MessageCircle size={16} className="text-green-500 fill-green-500/10" />
+                   <span>تواصل دايركت مع مصطفى على الواتس اب</span>
+                </a>
+              </div>
            </div>
         </div>
 
-        {/* 7. Social Proof & Countdown (STATIC) */}
+        {/* 7. Social Proof & Countdown */}
         <div className="bg-[#1c1c1c] rounded-[2rem] p-6 border border-zinc-800 shadow-xl">
-           {/* Modified Layout: Number on Right, Text on Left */}
            <div className="flex items-center justify-between gap-4 mb-6">
               <div className="text-right shrink-0">
                  <div className="font-outfit font-black text-5xl md:text-6xl text-white flex items-center gap-1">
                    <span className="text-red-500">+</span>
-                   {/* CountUp triggers when scrolled into view */}
                    <CountUp target={348} />
                  </div>
               </div>
@@ -326,7 +325,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
            </div>
         </div>
 
-        {/* 8. Join Team Button (STATIC) */}
+        {/* 8. Join Team Button */}
         <div className="flex justify-center -my-3 relative z-20">
            <a 
              href="https://www.instagram.com/themustafabdier?igsh=YW14Y2Y3MXBiYnJo&utm_source=qr"
@@ -338,7 +337,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
            </a>
         </div>
 
-        {/* 9. Bio Card (STATIC) */}
+        {/* 9. Bio Card */}
         <div className="bg-[#0f0f0f] rounded-[2rem] p-0 border border-zinc-800 overflow-hidden relative shadow-2xl mt-4">
            <div className="relative w-full h-[400px] bg-gradient-to-b from-zinc-800 to-[#0f0f0f]">
               <img 
@@ -360,7 +359,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
            </div>
         </div>
 
-        {/* 10. Golden Guarantee Card (STATIC) */}
+        {/* 10. Golden Guarantee Card */}
         <div className="relative mt-4 bg-black rounded-[2rem] border border-yellow-600/50 p-6 md:p-8 flex flex-col items-center text-center shadow-[0_0_20px_rgba(234,179,8,0.1)] overflow-hidden">
            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent animate-shine opacity-50"></div>
            
@@ -380,7 +379,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ score, answers }) => {
            </p>
         </div>
 
-        {/* 11. FAQs (STATIC) */}
+        {/* 11. FAQs */}
         <div className="mt-8 space-y-4">
           <h3 className="font-aref font-bold text-2xl text-white text-center mb-6">
             الأسئلة الشائعة
