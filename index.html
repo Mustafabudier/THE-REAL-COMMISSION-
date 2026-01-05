@@ -17,7 +17,6 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1761940831860281');
-    // ملاحظة: يتم إرسال PageView ديناميكياً من داخل App.tsx لضمان تتبع دقيق في تطبيقات الصفحة الواحدة
     </script>
     <!-- End Meta Pixel Code -->
 
@@ -26,7 +25,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -36,16 +35,12 @@
           extend: {
             fontFamily: {
               aref: ['"Aref Ruqaa"', 'serif'],
-              cairo: ['Cairo', 'sans-serif'],
               ibm: ['"IBM Plex Sans Arabic"', 'sans-serif'],
-              outfit: ['Outfit', 'sans-serif'],
+              inter: ['Inter', 'sans-serif'],
             },
             animation: {
               blob: "blob 7s infinite",
-              float: "float 6s ease-in-out infinite",
-              "fade-in-down": "fadeInDown 1s ease-out",
-              shine: "shine 1s infinite",
-              textShine: "textShine 3s linear infinite",
+              "text-shine": "textShine 3s linear infinite",
             },
             keyframes: {
               blob: {
@@ -53,17 +48,6 @@
                 "33%": { transform: "translate(30px, -50px) scale(1.1)" },
                 "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
                 "100%": { transform: "translate(0px, 0px) scale(1)" },
-              },
-              float: {
-                "0%, 100%": { transform: "translateY(0)" },
-                "50%": { transform: "translateY(-20px)" },
-              },
-              fadeInDown: {
-                "0%": { opacity: "0", transform: "translateY(-20px)" },
-                "100%": { opacity: "1", transform: "translateY(0)" },
-              },
-              shine: {
-                "100%": { transform: "translateX(100%)" },
               },
               textShine: {
                 "0%": { backgroundPosition: "0% 50%" },
@@ -89,12 +73,10 @@
 }
 </script>
 </head>
-  <body>
-    <!-- Meta Pixel Code (Noscript) -->
+  <body class="bg-black">
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1761940831860281&ev=PageView&noscript=1"
     /></noscript>
-    
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
