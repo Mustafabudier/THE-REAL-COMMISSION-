@@ -12,7 +12,7 @@ import { questions } from './data/quizData';
 
 type ViewState = 'landing' | 'quiz' | 'result_gate' | 'result';
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUCkGdIlXz08s8Uht5FgmFOsow6agDyRP9a87Q8bwX1WKudalp2tEs7nQVQlCqy1Y/exec"; 
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyw6Mev8ZvWP1gRdM54n4keEf7_7eOKu5cR6LDnm-6kxuZ7hWaM1bMXmd1FQC58yn_L/exec"; 
 
 const trackFbEvent = (eventName: string, params?: any) => {
   if (typeof window !== 'undefined' && (window as any).fbq) {
